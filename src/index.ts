@@ -1,5 +1,5 @@
 export {
-  createTiptLightningClient,
-  restoreTiptLightningClientFetch,
-  type CreateTiptLightningClientOptions,
-} from './tipt-lightning-mpp-client';
+  createLightningMppExtensionClient,
+  restoreLightningMppExtensionFetch,
+  type CreateLightningMppExtensionClientOptions,
+} from './lightning-mpp-extension-client';

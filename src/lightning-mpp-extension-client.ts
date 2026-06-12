@@ -11,7 +11,6 @@ const DEFAULT_EXTENSION_PROBE_TIMEOUT_MS = 1_500;
 
 interface MppResponseDetail {
   type?: string;
-  name?: string;
   paymentMethods?: string[];
   intents?: string[];
   supportsRequestedPaymentMethods?: boolean;
@@ -70,7 +69,7 @@ function waitForExtensionResponse(timeoutMs: number): Promise<MppResponseDetail>
 
     const onResponse = (event: Event) => {
       const detail = (event as CustomEvent<MppResponseDetail>).detail;
-      if (detail?.type !== 'response' || detail?.name !== 'TIPT') return;
+      if (detail?.type !== 'response') return;
       if (detail.supportsRequestedPaymentMethods === false) {
         cleanup();
         reject(new Error('MPP extension does not support the requested payment method(s).'));

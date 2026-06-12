@@ -1,6 +1,6 @@
 # lightning-mpp-extension-sdk
 
-Browser-side [Lightning MPP](https://www.npmjs.com/package/@buildonspark/lightning-mpp-sdk) client that automatically routes `402 Payment Required` approvals through a compatible browser extension (e.g. TIPT) via a `window` event bridge.
+Browser-side [Lightning MPP](https://www.npmjs.com/package/@buildonspark/lightning-mpp-sdk) client that automatically routes `402 Payment Required` approvals through a compatible browser extension via a `window` event bridge.
 
 It wraps `Mppx.create` so that when a server responds with a `402` Lightning payment challenge, the SDK:
 
@@ -19,9 +19,9 @@ npm install lightning-mpp-extension-sdk @buildonspark/lightning-mpp-sdk mppx
 ## Usage
 
 ```ts
-import { createTiptLightningClient } from 'lightning-mpp-extension-sdk';
+import { createLightningMppExtensionClient } from 'lightning-mpp-extension-sdk';
 
-const client = createTiptLightningClient({
+const client = createLightningMppExtensionClient({
   polyfill: false,
 });
 
@@ -32,7 +32,7 @@ const data = await response.json();
 ### Options
 
 ```ts
-interface CreateTiptLightningClientOptions {
+interface CreateLightningMppExtensionClientOptions {
   /** Custom fetch implementation. Defaults to the global fetch. */
   fetch?: typeof globalThis.fetch;
   /** Patch the global fetch (Mppx.create polyfill). Defaults to true. */
@@ -51,9 +51,9 @@ interface CreateTiptLightningClientOptions {
 If you used the global `fetch` polyfill, restore the original implementation with:
 
 ```ts
-import { restoreTiptLightningClientFetch } from 'lightning-mpp-extension-sdk';
+import { restoreLightningMppExtensionFetch } from 'lightning-mpp-extension-sdk';
 
-restoreTiptLightningClientFetch();
+restoreLightningMppExtensionFetch();
 ```
 
 ## Requirements
