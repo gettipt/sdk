@@ -44,13 +44,11 @@
     "url": "https://github.com/austinvach/lightning-mpp-extension-sdk/issues"
   },
   "homepage": "https://github.com/austinvach/lightning-mpp-extension-sdk#readme",
-  "peerDependencies": {
+  "dependencies": {
     "@buildonspark/lightning-mpp-sdk": "^0.1.4",
     "mppx": "^0.3.15"
   },
   "devDependencies": {
-    "@buildonspark/lightning-mpp-sdk": "^0.1.4",
-    "mppx": "^0.3.15",
     "tsup": "^8.3.5",
     "typescript": "~5.9.3"
   },

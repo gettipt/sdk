@@ -11,10 +11,10 @@ It wraps `Mppx.create` so that when a server responds with a `402` Lightning pay
 ## Installation
 
 ```bash
-npm install lightning-mpp-extension-sdk @buildonspark/lightning-mpp-sdk mppx
+npm install lightning-mpp-extension-sdk
 ```
 
-`@buildonspark/lightning-mpp-sdk` and `mppx` are **peer dependencies** — install them alongside this package.
+`@buildonspark/lightning-mpp-sdk` and `mppx` are bundled as package dependencies, so installing this SDK is enough.
 
 ## Usage
 
@@ -64,7 +64,7 @@ restoreLightningMppExtensionFetch();
 ## Development
 
 ```bash
-npm install      # install peer + dev dependencies
+npm install      # install dependencies + dev dependencies
 npm run build    # bundle ESM + CJS + type declarations into dist/
 npm run typecheck
 ```
