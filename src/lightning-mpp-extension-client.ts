@@ -1,6 +1,7 @@
 import { charge as lightningChargeMethod } from '@buildonspark/lightning-mpp-sdk';
 import { Mppx } from '@buildonspark/lightning-mpp-sdk/client';
 import { Method, PaymentRequest } from 'mppx';
+import type { Mppx as MppxClient } from 'mppx/client';
 
 const MPP_EXTENSION_EVENT = 'mpp:extension';
 const MPP_CHALLENGE_EVENT = 'mpp:challenge';
@@ -149,7 +150,9 @@ export interface CreateLightningMppExtensionClientOptions {
  * Creates an MPP Lightning client that routes 402 payment approvals through
  * the MPP browser extension event bridge.
  */
-export function createLightningMppExtensionClient(options: CreateLightningMppExtensionClientOptions = {}) {
+export function createLightningMppExtensionClient(
+  options: CreateLightningMppExtensionClientOptions = {},
+): MppxClient.Mppx {
   requirePageEventBridge();
 
   const paymentTimeoutMs = options.paymentTimeoutMs ?? DEFAULT_PAYMENT_TIMEOUT_MS;
