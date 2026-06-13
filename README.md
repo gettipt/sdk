@@ -1,8 +1,8 @@
 # lightning-mpp-extension-sdk
 
-Browser-side [Lightning MPP](https://www.npmjs.com/package/@buildonspark/lightning-mpp-sdk) client that automatically routes `402 Payment Required` approvals through a compatible browser extension via a `window` event bridge.
+Automatically routes `402 Payment Required` approvals through a compatible browser extension via a `window` event bridge.
 
-It wraps `Mppx.create` so that when a server responds with a `402` Lightning payment challenge, the SDK:
+When a server responds with a `402` Lightning payment challenge, the SDK:
 
 1. Probes the page for a compatible extension using the `mpp:extension` event (`type: 'request'`, `paymentMethods: ['lightning']`, `intents: ['charge']`).
 2. Forwards the Lightning `Payment` challenge to the extension via `mpp:challenge`.
@@ -13,8 +13,6 @@ It wraps `Mppx.create` so that when a server responds with a `402` Lightning pay
 ```bash
 npm install lightning-mpp-extension-sdk
 ```
-
-`@buildonspark/lightning-mpp-sdk` and `mppx` are bundled as package dependencies, so installing this SDK is enough.
 
 ## Usage
 
@@ -66,17 +64,7 @@ restoreLightningMppExtensionFetch();
 ```bash
 npm install      # install dependencies + dev dependencies
 npm run build    # bundle ESM + CJS + type declarations into dist/
-npm run typecheck
 ```
-
-## Publishing
-
-```bash
-npm version <patch|minor|major>
-npm publish
-```
-
-`prepublishOnly` runs the build automatically, and only the `dist/`, `README.md`, and `LICENSE` files are included in the published package.
 
 ## License
 
