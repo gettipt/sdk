@@ -1,6 +1,6 @@
 {
   "name": "lightning-mpp-extension-sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Browser-side Lightning MPP client that routes 402 (Payment Required) approvals through a compatible browser extension event bridge.",
   "license": "MIT",
   "author": "austinvach",
