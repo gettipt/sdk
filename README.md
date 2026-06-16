@@ -59,11 +59,26 @@ restoreLightningMppExtensionFetch();
 - A browser `window` context (the SDK throws if `window` is unavailable).
 - A compatible extension installed on the page that responds to the `mpp:extension`, `mpp:challenge`, and `mpp:credential` events.
 
+## Build Process
+
+Run from `sdk/`:
+
+```bash
+npm install
+npm run dev
+npm run typecheck
+npm run build
+```
+
+- `dev`: runs `tsup` in watch mode.
+- `typecheck`: runs `tsc --noEmit`.
+- `build`: creates ESM, CJS, and declaration outputs in `dist/`.
+
 ## Development
 
 ```bash
-npm install      # install dependencies + dev dependencies
-npm run build    # bundle ESM + CJS + type declarations into dist/
+npm install
+npm run build
 ```
 
 ## License
