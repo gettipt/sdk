@@ -11,7 +11,7 @@ When a server responds with a `402` Lightning payment challenge, the SDK:
 ## Installation
 
 ```bash
-npm install lightning-mpp-extension-sdk
+pnpm install lightning-mpp-extension-sdk
 ```
 
 ## Usage
@@ -64,10 +64,10 @@ restoreLightningMppExtensionFetch();
 Run from `sdk/`:
 
 ```bash
-npm install
-npm run dev
-npm run typecheck
-npm run build
+pnpm install
+pnpm run dev
+pnpm run typecheck
+pnpm run build
 ```
 
 - `dev`: runs `tsup` in watch mode.
@@ -77,8 +77,8 @@ npm run build
 ## Development
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 ## License
