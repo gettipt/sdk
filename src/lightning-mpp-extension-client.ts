@@ -2,44 +2,21 @@ import { charge as lightningChargeMethod } from '@buildonspark/lightning-mpp-sdk
 import { Mppx } from '@buildonspark/lightning-mpp-sdk/client';
 import { Method, PaymentRequest } from 'mppx';
 import type { Mppx as MppxClient } from 'mppx/client';
-
-const MPP_EXTENSION_EVENT = 'mpp:extension';
-const MPP_CHALLENGE_EVENT = 'mpp:challenge';
-const MPP_CREDENTIAL_EVENT = 'mpp:credential';
+import {
+  DEFAULT_REQUESTED_INTENTS,
+  DEFAULT_REQUESTED_PAYMENT_METHODS,
+  MPP_CHALLENGE_EVENT,
+  MPP_CREDENTIAL_EVENT,
+  MPP_EVENT_BRIDGE_PROTOCOL_VERSION,
+  MPP_EXTENSION_EVENT,
+  buildMppProbeRequestDetail,
+  type MppExtChallengeDetail,
+  type MppExtCredentialDetail,
+  type MppResponseDetail,
+} from './event-bridge';
 
 const DEFAULT_PAYMENT_TIMEOUT_MS = 90_000;
 const DEFAULT_EXTENSION_PROBE_TIMEOUT_MS = 1_500;
-
-interface MppResponseDetail {
-  type?: string;
-  paymentMethods?: string[];
-  intents?: string[];
-  supportsRequestedPaymentMethods?: boolean;
-  supportsRequestedIntents?: boolean;
-}
-
-interface MppExtChallengeDetail {
-  requestId: string;
-  invoice: string;
-  amountSats?: number;
-  scheme: 'Payment';
-  challenge: {
-    id: string;
-    realm: string;
-    method: string;
-    intent: string;
-    request: string;
-    expires?: string;
-    opaque?: string;
-  };
-}
-
-interface MppExtCredentialDetail {
-  requestId?: string;
-  approved?: boolean;
-  credential?: string;
-  error?: string;
-}
 
 function requirePageEventBridge(): void {
   if (typeof window === 'undefined') {
@@ -61,7 +38,20 @@ function parseAmountSats(value: string): number | undefined {
   return parsed;
 }
 
-function waitForExtensionResponse(timeoutMs: number): Promise<MppResponseDetail> {
+export interface ProbeLightningMppExtensionOptions {
+  timeoutMs?: number;
+  paymentMethods?: string[];
+  intents?: string[];
+}
+
+export function probeLightningMppExtension(
+  options: ProbeLightningMppExtensionOptions = {},
+): Promise<MppResponseDetail> {
+  requirePageEventBridge();
+  const timeoutMs = options.timeoutMs ?? DEFAULT_EXTENSION_PROBE_TIMEOUT_MS;
+  const paymentMethods = options.paymentMethods ?? [...DEFAULT_REQUESTED_PAYMENT_METHODS];
+  const intents = options.intents ?? [...DEFAULT_REQUESTED_INTENTS];
+
   return new Promise<MppResponseDetail>((resolve, reject) => {
     const timer = window.setTimeout(() => {
       cleanup();
@@ -71,6 +61,16 @@ function waitForExtensionResponse(timeoutMs: number): Promise<MppResponseDetail>
     const onResponse = (event: Event) => {
       const detail = (event as CustomEvent<MppResponseDetail>).detail;
       if (detail?.type !== 'response') return;
+      if (
+        detail.protocolVersion !== undefined
+        && detail.protocolVersion !== MPP_EVENT_BRIDGE_PROTOCOL_VERSION
+      ) {
+        cleanup();
+        reject(new Error(
+          `MPP extension protocol version ${detail.protocolVersion} is incompatible with SDK protocol version ${MPP_EVENT_BRIDGE_PROTOCOL_VERSION}.`,
+        ));
+        return;
+      }
       if (detail.supportsRequestedPaymentMethods === false) {
         cleanup();
         reject(new Error('MPP extension does not support the requested payment method(s).'));
@@ -92,11 +92,7 @@ function waitForExtensionResponse(timeoutMs: number): Promise<MppResponseDetail>
 
     window.addEventListener(MPP_EXTENSION_EVENT, onResponse as EventListener);
     window.dispatchEvent(new CustomEvent(MPP_EXTENSION_EVENT, {
-      detail: {
-        type: 'request',
-        paymentMethods: ['lightning'],
-        intents: ['charge'],
-      },
+      detail: buildMppProbeRequestDetail(paymentMethods, intents),
     }));
   });
 }
@@ -144,6 +140,8 @@ export interface CreateLightningMppExtensionClientOptions {
   paymentTimeoutMs?: number;
   probeExtension?: boolean;
   extensionProbeTimeoutMs?: number;
+  paymentMethods?: string[];
+  intents?: string[];
 }
 
 /**
@@ -162,7 +160,11 @@ export function createLightningMppExtensionClient(
   const extensionBackedCharge = Method.toClient(lightningChargeMethod, {
     async createCredential({ challenge }) {
       if (options.probeExtension !== false) {
-        await waitForExtensionResponse(extensionProbeTimeoutMs);
+        await probeLightningMppExtension({
+          timeoutMs: extensionProbeTimeoutMs,
+          paymentMethods: options.paymentMethods,
+          intents: options.intents,
+        });
       }
 
       const invoice = challenge.request.methodDetails.invoice;

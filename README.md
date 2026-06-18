@@ -41,8 +41,28 @@ interface CreateLightningMppExtensionClientOptions {
   probeExtension?: boolean;
   /** Timeout for the extension probe, in ms. Defaults to 1500. */
   extensionProbeTimeoutMs?: number;
+  /** Requested payment methods advertised during extension probe. */
+  paymentMethods?: string[];
+  /** Requested intents advertised during extension probe. */
+  intents?: string[];
 }
 ```
+
+### Extension probe utility
+
+You can probe for extension availability and capability support without
+creating an MPP client:
+
+```ts
+import { probeLightningMppExtension } from 'lightning-mpp-extension-sdk';
+
+const response = await probeLightningMppExtension({ timeoutMs: 1500 });
+console.log(response.type); // 'response'
+```
+
+If the extension includes a `protocolVersion` field in its `mpp:extension`
+response, the SDK enforces compatibility with its own event-bridge protocol
+version and throws on mismatch.
 
 ### Restoring global fetch
 
