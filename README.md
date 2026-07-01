@@ -45,6 +45,16 @@ interface CreateLightningMppExtensionClientOptions {
   paymentMethods?: string[];
   /** Requested intents advertised during extension probe. */
   intents?: string[];
+  /**
+   * Optional payment-routing hint forwarded to the extension challenge payload.
+   * Mirrors lightning-mpp-sdk client option naming.
+   */
+  preferSpark?: boolean;
+  /**
+   * Optional invoice-generation hint forwarded to the extension challenge payload.
+   * Mirrors lightning-mpp-sdk option naming.
+   */
+  includeSparkInvoice?: boolean;
 }
 ```
 

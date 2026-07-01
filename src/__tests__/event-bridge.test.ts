@@ -92,6 +92,8 @@ describe('wire type contracts', () => {
       requestId: 'test-id',
       invoice: 'spark1...',
       amountSats: 1000,
+      preferSpark: false,
+      includeSparkInvoice: false,
       scheme: 'Payment',
       challenge: {
         id: 'chal-id',
@@ -105,6 +107,8 @@ describe('wire type contracts', () => {
     };
 
     expect(challenge.amountSats).toBe(1000);
+    expect(challenge.preferSpark).toBe(false);
+    expect(challenge.includeSparkInvoice).toBe(false);
     expect(challenge.challenge.expires).toBe('2025-01-01T00:00:00Z');
   });
 });

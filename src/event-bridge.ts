@@ -25,6 +25,8 @@ export interface MppExtChallengeDetail {
   requestId: string;
   invoice: string;
   amountSats?: number;
+  preferSpark?: boolean;
+  includeSparkInvoice?: boolean;
   scheme: 'Payment';
   challenge: {
     id: string;

@@ -142,6 +142,8 @@ export interface CreateLightningMppExtensionClientOptions {
   extensionProbeTimeoutMs?: number;
   paymentMethods?: string[];
   intents?: string[];
+  preferSpark?: boolean;
+  includeSparkInvoice?: boolean;
 }
 
 /**
@@ -177,6 +179,10 @@ export function createLightningMppExtensionClient(
           requestId,
           invoice,
           amountSats: parseAmountSats(challenge.request.amount),
+          ...(options.preferSpark !== undefined ? { preferSpark: options.preferSpark } : {}),
+          ...(options.includeSparkInvoice !== undefined
+            ? { includeSparkInvoice: options.includeSparkInvoice }
+            : {}),
           scheme: 'Payment',
           challenge: {
             id: challenge.id,
